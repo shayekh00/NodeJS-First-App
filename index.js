@@ -59,22 +59,32 @@ const server = http.createServer((req, res) => {
     }
 
     //Read File
-    let file_404_Path = path.join(__dirname, 'public',
-        req.url === '/' ? '404.html' : req.url);
+
 
     fs.readFile(filePath, (err, content) => {
-        console.log("this worked");
+        // console.log("this worked");
         if (err) {
             if (err.code == 'ENOENT') {
-                fs.readFile(file_404_Path, (err, content) => {
+                // let file_404_Path = path.join(__dirname, 'public', req.url === '/' ? '404.html' : req.url);
+                fs.readFile(path.join(__dirname, 'public', '404.html'), (err, content) => {
+
+                    console.log("thisss");
                     res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end(content);
+                    res.end(content, 'utf8');
                 });
+            } else {
+                //console.log("thisss");
+                res.writeHead(500);
+                res.end(`Server Error: ${err.code}`);
             }
         }
+        else {
+            //Success!!
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(content);
+        }
 
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(content);
+
     });
 
 
